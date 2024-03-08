@@ -21,3 +21,16 @@ jobs:
         username: alanvp301
         # Password or personal access token used to log against the Docker registry
         password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v5.2.0
+      with:
+        # Build's context is the set of files located in the specified PATH or URL
+        context: .
+        # Path to the Dockerfile
+        file: ./Dockerfile
+        # Push is a shorthand for --output=type=registry
+        push: true
+        # List of tags
+        tags: alanvp301/go_ci:${{github.ref_name}}
+          
