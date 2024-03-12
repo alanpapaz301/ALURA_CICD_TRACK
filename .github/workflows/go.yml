@@ -2,15 +2,15 @@ name: Go
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ '*' ]
   pull_request:
-    branches: [ "*" ]
+    branches: [ '*' ]
 
 jobs:
 
   test:
     runs-on: ${{ matrix.os }}
-    env: 
+    env:
       HOST: localhost
       PORT: 5432
       USER: root
@@ -19,8 +19,7 @@ jobs:
     strategy:
       matrix:
         go_version: ['1.18', '1.17', '>=1.18']
-        os: ['ubuntu-latest', 'ubuntu-20.04']
-
+        os: ['ubuntu-latest', 'ubuntu-18.04']
     steps:
     - uses: actions/checkout@v3
 
@@ -41,24 +40,28 @@ jobs:
   
   build:
     needs: test
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build
       run: go build -v main.go
-
-
+      
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.3.1
+      uses: actions/upload-artifact@v3.1.0
       with:
-        # Artifact name
+    # Artifact name
         name: programa
-        # A file, directory or wildcard pattern that describes what to upload
+    # A file, directory or wildcard pattern that describes what to upload
         path: main
-        # The desired behavior if no files are found using the provided path.
-              
 
-  docker: 
+
+  docker:
     needs: build
     uses: ./.github/workflows/Docker.yml
     secrets: inherit
+
+
+  Deploy_EC2:
+    needs: build
+    uses: ./.github/workflows/EC2.yml
+    secrets: inherit  
