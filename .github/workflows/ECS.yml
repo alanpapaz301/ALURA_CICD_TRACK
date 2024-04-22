@@ -1,0 +1,10 @@
+name: CI ECS Test
+
+on:
+  workflow_call:
+
+jobs:
+
+  ECS:
+    runs-on: ubuntu-latest
+    steps:
